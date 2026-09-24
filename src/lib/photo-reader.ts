@@ -89,13 +89,24 @@ let cvPromise: Promise<OpenCvRuntime> | null = null;
 async function loadOpenCv(): Promise<OpenCvRuntime> {
   if (!cvPromise) {
     cvPromise = (async () => {
-      const imported = await import("@techstark/opencv-js");
-      const withDefault = imported as unknown as { default?: OpenCvRuntime };
-      // OpenCV may expose either a ready object or a Promise-like module. Resolve
-      // both forms without relying on `instanceof Promise`, which can fail across
-      // bundled browser realms.
-      const moduleValue = withDefault.default ?? (imported as unknown as OpenCvRuntime);
-      const cv = await Promise.resolve(moduleValue) as OpenCvRuntime;
+      const browser = window as Window & { cv?: OpenCvRuntime | Promise<OpenCvRuntime> };
+      if (!browser.cv) {
+        await new Promise<void>((resolve, reject) => {
+          const script = document.createElement("script");
+          script.src = `${import.meta.env.BASE_URL}opencv.js`;
+          script.async = true;
+          script.onload = () => resolve();
+          script.onerror = () => {
+            script.remove();
+            reject(new Error("The image scanner could not start. Please try again."));
+          };
+          document.head.append(script);
+        });
+      }
+      // The UMD build exposes a native Promise while WASM initializes.
+      // Loading it directly avoids a bundler wrapping the Promise in a module proxy.
+      const cv = await browser.cv;
+      if (!cv) throw new Error("The image scanner could not start. Please try again.");
       if (cv.Mat) return cv;
 
       await new Promise<void>((resolve, reject) => {
@@ -116,6 +127,7 @@ async function loadOpenCv(): Promise<OpenCvRuntime> {
   } catch (error) {
     // A temporary script or WASM load failure should not poison later attempts.
     cvPromise = null;
+    delete (window as Window & { cv?: OpenCvRuntime | Promise<OpenCvRuntime> }).cv;
     throw error;
   }
 }

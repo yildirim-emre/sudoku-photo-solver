@@ -16,7 +16,7 @@ The scanner uses OpenCV.js for grid detection and Tesseract.js for digit recogni
 
 ## Privacy
 
-Your selected photo and puzzle are processed locally in your browser. **The application does not upload, save, or collect the photo or puzzle data.** The photo remains in browser memory until you clear it, replace it, or close the page. Only your language preference is saved in browser local storage. On first scan, the browser downloads OCR worker, core, and English recognition data from jsDelivr and Project Naptha CDNs; those providers can see normal network request metadata, but the photo is not sent to them. GitHub Pages may keep standard web access logs. There are no accounts, analytics, or application server.
+Your selected photo and puzzle are processed locally in your browser. **The application does not upload, save, or collect the photo or puzzle data.** The photo remains in browser memory until you clear it, replace it, or close the page. Only your language preference is saved in browser local storage. On first scan, the browser loads OpenCV.js from this GitHub Pages site and downloads OCR worker, core, and English recognition data from jsDelivr and Project Naptha CDNs; those providers can see normal network request metadata, but the photo is not sent to them. GitHub Pages may keep standard web access logs. There are no accounts, analytics, or application server.
 
 ## Develop and deploy
 
