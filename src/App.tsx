@@ -108,6 +108,7 @@ export default function Home() {
       setNotice(tr("detected", { count: countClues(detected) }));
       setActiveCell(null);
     } catch (scanError) {
+      console.error("Sudoku photo scan failed:", scanError);
       setPhase("photo");
       setError(
         scanError instanceof Error ? localizeScanError(scanError, locale) : tr("scanFailed"),
@@ -281,7 +282,7 @@ export default function Home() {
                 <div className="photo-caption">
                   <span className="file-name" title={photo?.name}>{photo?.name}</span>
                   <button className="text-action" type="button" onClick={() => photoInput.current?.click()}>
-                    Change photo
+                    {tr("changePhoto")}
                   </button>
                 </div>
               </div>
@@ -301,7 +302,7 @@ export default function Home() {
               onClick={() => cameraInput.current?.click()}
             >
               <Camera size={18} />
-              Take photo
+              {tr("takePhoto")}
             </Button>
             <Button
               type="button"
@@ -310,7 +311,7 @@ export default function Home() {
               onClick={() => photoInput.current?.click()}
             >
               <ImagePlus size={18} />
-              Choose photo
+              {tr("choosePhoto")}
             </Button>
           </div>
 
@@ -325,13 +326,13 @@ export default function Home() {
           ) : photo ? (
             <Button type="button" className="scan-action" onClick={scanPhoto}>
               <ScanLine size={18} />
-              Scan photo
+              {tr("scanPhoto")}
             </Button>
           ) : null}
 
           <p className="privacy-note">
             <ShieldCheck size={15} strokeWidth={1.8} aria-hidden="true" />
-            Your photo is processed in this browser and isn’t uploaded.
+            {tr("privacyNote")}
           </p>
 
           {error ? <p className="message message-error" role="alert">{error}</p> : null}
@@ -439,23 +440,23 @@ export default function Home() {
                 {!allRevealed ? (
                   <Button type="button" className="solve-action reveal-all-action" onClick={revealAllAnswers}>
                     <Eye size={17} />
-                    Reveal all
+                    {tr("revealAll")}
                   </Button>
                 ) : null}
                 <Button type="button" variant="outline" className="edit-action" onClick={() => { setPhase("review"); setNotice(""); setRevealedCells(new Set()); }}>
-                  Edit clues
+                  {tr("editClues")}
                 </Button>
               </>
             ) : (
               <Button type="button" className="solve-action" disabled={clues === 0} onClick={solvePuzzle}>
                 <Check size={17} />
-                Solve puzzle
+                {tr("solve")}
               </Button>
             )}
             {photo || clues > 0 ? (
               <Button type="button" variant="ghost" className="clear-action" onClick={clearPuzzle}>
                 <RotateCcw size={16} />
-                Clear
+                {tr("clear")}
               </Button>
             ) : null}
           </div>
