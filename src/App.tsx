@@ -50,6 +50,8 @@ export default function Home() {
     document.documentElement.lang = locale;
     document.title = tr("title");
     localStorage.setItem("sudoku-language", locale);
+    setNotice("");
+    setError("");
   }, [locale]);
 
   useEffect(
